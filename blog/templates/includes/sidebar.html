@@ -1,0 +1,43 @@
+<!-- Side widgets-->
+<div class="col-lg-3">
+    <!-- Search widget-->
+    <div class="card mb-4">
+
+        {% if user.is_anonymous %}
+        <div class="card">
+            <div class="card-header">Si quieres saber más...</div>
+            <a type="button" class="btn btn-primary mt-1"
+                href="{% url 'app_home:index' %}">Entra</a>
+            <a type="button" class="btn btn-primary mt-1"
+                href="{% url 'app_users:user-register' %}">Regístrate</a>
+        </div>
+        {% else %}
+        <div class="card-header">Perfil</div>
+        <div class="card-body">
+            <div class="d-flex flex-column align-items-center text-center">
+                {% if user.profile_picture %}
+                <img src="{{ user.profile_picture.url }}" alt="Admin" class="rounded-circle" width="150">
+                {% else %}
+                <img src="https://www.softzone.es/app/uploads-softzone.es/2018/04/guest.png" alt="Admin" class="rounded-circle" width="150">
+                {% endif %}
+                <div class="mt-3">
+                    <h4>{{ user.full_name }}</h4>
+                    <p class="text-secondary mb-1">{{ user.ocupation }}</p>
+                    <p class="text-muted font-size-sm">{{ user.email }}</p>
+                    <a class="btn btn-primary" href="{% url 'app_favorites:perfil' %}">Perfil</a>
+                    <a class="btn btn-outline-primary" href="{% url 'app_users:user-logout' %}">Cerrar sesión</a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Categories widget-->
+    <div class="card mb-4">
+        <div class="card-header">Categorias</div>
+        {% for cat in categories %}
+        <a type="button" class="btn btn-secondary mt-1"
+            href="{% url 'app_entry:entry-list' %}?category={{ cat.name }}">{{ cat.short_name }}</a>
+        {% endfor %}
+    </div>
+</div>

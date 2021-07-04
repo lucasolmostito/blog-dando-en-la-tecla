@@ -1,0 +1,148 @@
+<!-- head para PC -->
+{% extends "favorites/base_favorites.html" %}
+{% load static %}
+
+
+{% block title %}
+    Perfil de {{ user.full_name }}
+{% endblock title %}
+    
+
+{% block content %}
+
+{% include "includes/header.html" %}
+
+<div class="container">
+    <div class="main-body p-5">
+
+        <!-- /Breadcrumb -->
+
+        <div class="row gutters-sm">
+            <div class="col-md-4 mb-3">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex flex-column align-items-center text-center">
+                            {% if user.profile_picture %}
+                            <img src="{{ user.profile_picture.url }}" alt="Admin" class="rounded-circle" width="150">
+                            {% else %}
+                            <img src="https://www.softzone.es/app/uploads-softzone.es/2018/04/guest.png" alt="Admin"
+                                class="rounded-circle" width="150">
+                            {% endif %}
+                            <div class="mt-3">
+                                <h4>{{ user.full_name }}</h4>
+                                <p class="text-secondary mb-1">{{ user.ocupation }}</p>
+                                <p class="text-muted font-size-sm">{{ user.email }}</p>
+                                <a class="btn btn-primary" href="{% url 'app_users:user-logout' %}">Cerrar sesión</a>
+                                <a class="btn btn-primary" href="{% url 'app_users:user-update' %}">Cambiar
+                                    contraseña</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <h6 class="mb-0">Nombre Completo</h6>
+                            </div>
+                            <div class="col-sm-9 text-secondary">
+                                {{ user.full_name }}
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <h6 class="mb-0">Email</h6>
+                            </div>
+                            <div class="col-sm-9 text-secondary">
+                                {{ user.email }}
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <h6 class="mb-0">Ocupación</h6>
+                            </div>
+                            <div class="col-sm-9 text-secondary">
+                                {{ user.ocupation }}
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <h6 class="mb-0">Género</h6>
+                            </div>
+                            <div class="col-sm-9 text-secondary">
+
+                                {% ifequal user.gender 'M' %}
+                                <h6 class="mb-0">Masculino</h6>
+                                {% endifequal %}
+                                {% ifequal user.gender 'F' %}
+                                <h6 class="mb-0">Femenino</h6>
+                                {% endifequal %}
+                                {% ifequal user.gender 'O' %}
+                                <h6 class="mb-0">Otro</h6>
+                                {% endifequal %}
+
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <h6 class="mb-0">Fecha de nacimiento</h6>
+                            </div>
+                            <div class="col-sm-9 text-secondary">
+                                {{ user.date_birth }}
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <a class="btn btn-dark" href="{% url 'app_users:user-info-update' user.pk %}">Edit</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row gutters-sm">
+                    {% for entry in entries_user %}
+                    <div class="card mb-3 p-2">
+                        <div class="row g-0">
+                            <div class="col-md-4">
+
+                                <img class='img-fluid' src="{{ entry.entry.image.url }}" alt="...">
+
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <h5 class="card-title"><small>{{ entry.entry.title }}</small></h5>
+                                    <p class="card-text"><small>{{ entry.entry.resume | truncatechars:100}}</small></p>
+
+                                    <form class="mt-2" style="float:unset;" method="POST"
+                                        action="{% url 'app_favorites:delete-favourite' entry.pk %}">{% csrf_token %}
+                                        <a class="btn btn-dark ml-2"
+                                            href="{% url 'app_entry:entry-detail' entry.entry.slug %}">Read more →</a>
+                                        <button type="submit" class="btn btn-primary">Eliminar de favoritos</button>
+                                    </form>
+                                    <p class="card-text" style="float: right;"><small class="text-muted">{{entry.entry.created }}</small>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+
+                </div>
+
+
+
+            </div>
+        </div>
+
+    </div>
+</div>
+{% include "includes/footer.html" %}
+
+{% endblock content %}

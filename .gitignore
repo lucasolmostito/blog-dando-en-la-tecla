@@ -1,0 +1,11 @@
+blog/secret.json
+blog/applications/entries/migrations/000*
+blog/applications/entries/migrations/__pycache__
+blog/applications/favorites/migrations/000*
+blog/applications/favorites/migrations/__pycache__
+blog/applications/home/migrations/000*
+blog/applications/home/migrations/__pycache__
+blog/applications/users/migrations/000*
+blog/applications/users/migrations/__pycache__
+blog/media/Entry/*
+blog/media/Profiles_picture/*

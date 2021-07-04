@@ -1,0 +1,121 @@
+<!-- head para PC -->
+{% extends "home/base_home.html" %}
+{% load static %}
+
+{% block title %}
+{{ entry.title }}
+{% endblock title %}
+
+{% block description %}
+<meta name="description" content="{{ entry.resume }}">
+{% endblock description %}
+
+{% block tags %}
+<meta name="kwords" content="
+{% for tag in entry.tag.all %}
+    {{ tag.name }},
+{% endfor %}
+    ">
+{% endblock %}
+
+{% block content %}
+
+{% include "includes/header.html" %}
+<!-- Page content-->
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-lg-9">
+            <!-- Post content-->
+            <article>
+                <!-- Post header-->
+                <header class="mb-4">
+                    <!-- Post title-->
+                    <h1 class="fw-bolder mb-1">{{ entry.title }}</h1>
+                    <!-- Post meta content-->
+                    <div class="text-muted fst-italic mb-2">{{ entry.created }}</div>
+                    <!-- Post categories-->
+
+                    {% for tag in entry.tag.all %}
+                    <a class="badge bg-secondary text-decoration-none link-light" href="#!">{{ tag.name }}</a>
+                    {% endfor %}
+
+                </header>
+                <!-- Preview image figure-->
+                <figure class="mb-4"><img class="img-fluid rounded" src="{{ entry.image.url }}" alt="..." /></figure>
+
+                <!-- Add to favorites entries -->
+                <form class="mt-2 mb-2 text-center" method="POST"
+                    action="{% url 'app_favorites:add-favourite' entry.pk %}">{% csrf_token %}
+                    {% if not user.is_anonymous %}
+                        {% if entry in entry_favorites %}
+                        <a class="btn btn-danger" href="{% url 'app_favorites:perfil' %}">Ver mis favoritos</a>                           
+                        {% else %}
+                        <button type="submit" class="btn btn-primary">Agregar a favoritos</button>                           
+                        {% endif %}
+                    {% endif %}
+
+                </form>
+                <!-- Post content-->
+                <section class="fs-5 mb-5">
+                    {{ entry.resume }}
+                    <hr>
+                    {{ entry.content | safe }}
+                </section>
+            </article>
+            <!-- Comments section-->
+            <section class="mb-5">
+                <div class="card bg-light">
+                    <div class="card-body">
+                        
+                        <!-- Comment form-->
+                        <form class="mb-4" method="POST" action="{% url 'app_entry:add-comment' entry.slug %}">{% csrf_token %}
+                        {% if not user.is_anonymous %}
+                            <textarea name="comment" id="comment" class="form-control" rows="3"placeholder="Déjanos un comentario sobre el post!"></textarea>
+                            <button type="submit" class="btn btn-primary m-2">Enviar</button>
+                        {% else %}
+                            <textarea name="comment" id="comment" class="form-control" rows="3"placeholder="Entra o Regístrate para dejar tu comentario"></textarea>
+                            <a class="btn btn-primary m-2" href="{% url 'app_home:index' %}">Entrar</a>
+                            <a class="btn btn-primary m-2" href="{% url 'app_users:user-register' %}">Registrarme</a>
+                        {% endif %}
+                        </form>
+                                
+                        <!-- Comment with nested comments-->
+                        {% if not comments %}
+                        <div class="alert alert-warning" role="alert">
+                            ¡Se el primero en dejar tu comentario! Si no tienes una cuenta <a href="{% url 'app_users:user-register' %}" class="alert-link">Regístrate</a> para poder comentar y mucho más.
+                            <br>Si ya tienes una, accede a ella desde la página de <a href="{% url 'app_home:index' %}" class="alert-link">Inicio</a>
+                        </div>
+                        {% endif %}
+
+                        {% for comment in comments %}
+                        <div class="d-flex mb-4">
+                            <!-- Parent comment-->
+                            <div class="flex-shrink-0">
+                                {% if comment.user.profile_picture %}
+                                <img class="rounded-circle" src="{{ comment.user.profile_picture.url }}" alt="..."
+                                    width="55" />
+                                {% else %}
+                                <img class="rounded-circle"
+                                    src="https://www.softzone.es/app/uploads-softzone.es/2018/04/guest.png" alt="..."
+                                    width="55" />
+                                {% endif %}
+                            </div>
+                            <div class="ms-3">
+                                <div class="fw-bold">{{ comment.user.full_name }}</div>
+                                {{ comment.message }}
+                                <br>
+                                <small>{{ comment.created }}</small>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </section>
+        </div>
+        <!-- Side widgets-->
+        {% include 'includes/sidebar.html' %}
+    </div>
+</div>
+{% include "includes/footer.html" %}
+
+{% endblock content %}

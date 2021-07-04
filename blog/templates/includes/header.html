@@ -1,0 +1,38 @@
+<!-- Responsive navbar-->
+    
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand" href="{% url 'app_home:index' %}" style="font-family: 'Days One', sans-serif;">Dando en la tecla</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span
+                class="navbar-toggler-icon"></span></button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                
+                {% if request.resolver_match.url_name == 'index' %}                    
+                <li class="nav-item"><a class="nav-link" href="{% url 'app_home:index' %}" style="color: white; font-family: 'Days One', sans-serif;">Inicio</a></li>
+                {% else %}
+                <li class="nav-item"><a class="nav-link" href="{% url 'app_home:index' %}" style="font-family: 'Days One', sans-serif;">Inicio</a></li>
+                {% endif %}
+                {% if request.resolver_match.url_name == 'entry-list' %}   
+                <li class="nav-item"><a class="nav-link" href="{% url 'app_entry:entry-list' %}" style="color: white; font-family: 'Days One', sans-serif;">Artículos</a></li>
+                {% else %}
+                <li class="nav-item"><a class="nav-link" href="{% url 'app_entry:entry-list' %}" style="font-family: 'Days One', sans-serif;">Artículos</a></li>
+                {% endif %}
+                {% if user.is_anonymous %}
+                <a class="btn btn-outline-light my-2 my-sm-0" type="submit" href="{% url 'app_users:user-register' %}" style="font-family: 'Days One', sans-serif;">Registrarse</a>
+                
+                {% else %}
+                
+                {% if request.resolver_match.url_name == 'perfil' %}
+                <a class="btn btn-light my-2 my-sm-0" type="submit" href="{% url 'app_favorites:perfil' %}" style="font-family: 'Days One', sans-serif;">Perfil</a>
+                {% else %}
+                <a class="btn btn-outline-light my-2 my-sm-0" type="submit" href="{% url 'app_favorites:perfil' %}" style="font-family: 'Days One', sans-serif;">Perfil</a>
+                {% endif %}
+                    
+                {% endif %}
+                
+            </ul>
+        </div>
+    </div>
+</nav>

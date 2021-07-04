@@ -1,0 +1,94 @@
+{% extends "home/base_home.html" %}
+{% load static %}
+
+{% block title %}
+{{ home.title }}
+{% endblock title %}
+
+{% block description %}
+<meta name="description" content="{{ home.description }}">
+{% endblock description %}
+
+
+{% block content %}
+
+{% include "includes/header.html" %}
+<!-- Page header with logo and tagline-->
+<header class="py-5 border-bottom mb-4" style="background-image: url({% static 'img/gris-header.jpg' %});">
+    <div class="container">
+        <div class="text-center my-5">
+            <h1 class="fw-bolder text-white">Bienvenido a dando en la tecla</h1>
+            <p class="lead mb-0 text-white">Date una tecla en los posts que más te interesen.</p>
+            <p class="lead mb-0 text-white">Regístrate para comentar y guardar tus posts favoritos.</p>
+        </div>
+    </div>
+</header>
+<!-- Page content-->
+<div class="container">
+    <div class="row">
+        <!-- Blog entries-->
+        <div class="col-lg-9">
+            <!-- Featured blog post-->
+            <div class="card mb-4">
+                <a href="#!"><img class="card-img-top" src="{{ cover.image.url }}" alt="..." /></a>
+                <div class="card-body">
+                    <div class="small text-muted">{{ cover.created }}</div>
+                    <h2 class="card-title">{{ cover.title }}</h2>
+                    <p class="card-text">{{ cover.resume | truncatechars:250 }}</p>
+                    <form class="mt-2" method="POST" action="{% url 'app_favorites:add-favourite' cover.pk %}">{% csrf_token %}
+                        <a class="btn btn-dark" href="{% url 'app_entry:entry-detail' cover.slug %}">Read more →</a>
+                        
+                                                      
+                        {% if not user.is_anonymous %}
+                            {% if cover in entry_favorites %}
+                            <a class="btn btn-outline-primary" href="{% url 'app_favorites:perfil' %}">Ver mis favoritos</a>                           
+                            {% else %}
+                            <button type="submit" class="btn btn-outline-primary">Agregar a favoritos</button>                           
+                            {% endif %}
+                        {% endif %}
+                            
+                    </form>
+
+                </div>
+            </div>
+            <!-- Nested row for non-featured blog posts-->
+            <div class="row">
+                <!-- Blog post-->
+
+                {% for entry in home_entry %}
+                {% if forloop.conter is 1 or 2 %}
+                <div class="col-lg-6">
+                    <div class="card mb-4">
+                        <a href="#!"><img class="card-img-top" src="{{ entry.image.url }}" alt="..." /></a>
+                        <div class="card-body">
+                            <div class="small text-muted">{{ entry.created }}</div>
+                            <h2 class="card-title h4">{{ entry.title | truncatechars:30 }}</h2>
+                            <p class="card-text">{{ entry.resume | truncatechars:100 }}</p>
+                            <form class="mt-2" method="POST" action="{% url 'app_favorites:add-favourite' entry.pk %}">{% csrf_token %}
+                                <a class="btn btn-dark" href="{% url 'app_entry:entry-detail' entry.slug %}">Read more→</a>
+                                {% if not user.is_anonymous %}
+                                    
+                                    {% if entry in entry_favorites %}
+                                    <a class="btn btn-outline-primary" href="{% url 'app_favorites:perfil' %}">Ver mis favoritos</a> 
+                                    {% else %}
+                                    <button type="submit" class="btn btn-outline-primary">Me gusta</button>
+                                    {% endif %}
+                                {% endif %}                                       
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                {% endfor %}
+                
+                
+                    
+            </div>
+        </div>
+        {% include 'includes/sidebar_home.html' %}
+    </div>
+</div>
+    {% include "includes/footer.html" %}
+
+    {% endblock content %}
