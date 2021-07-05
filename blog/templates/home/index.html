@@ -62,7 +62,7 @@
                         <a href="#!"><img class="card-img-top" src="{{ entry.image.url }}" alt="..." /></a>
                         <div class="card-body">
                             <div class="small text-muted">{{ entry.created }}</div>
-                            <h2 class="card-title h4">{{ entry.title | truncatechars:30 }}</h2>
+                            <h2 class="card-title h4">{{ entry.title | truncatechars:50 }}</h2>
                             <p class="card-text">{{ entry.resume | truncatechars:100 }}</p>
                             <form class="mt-2" method="POST" action="{% url 'app_favorites:add-favourite' entry.pk %}">{% csrf_token %}
                                 <a class="btn btn-dark" href="{% url 'app_entry:entry-detail' entry.slug %}">Read more→</a>
